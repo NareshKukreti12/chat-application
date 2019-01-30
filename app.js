@@ -2,11 +2,13 @@
 
 var SwaggerExpress = require('swagger-express-mw');
 var express=require('express');
+const http=require('http');
 var app = express();
 const path=require('path');
-
-
+const socketIO=require('socket.io');
 module.exports = app; // for testing
+var server=http.createServer(app)
+var io=socketIO(server);
 
 var config = {
   appRoot: __dirname // required config
@@ -27,7 +29,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   const publicPath=path.join(__dirname+'/public')
   console.log(publicPath)
   app.use(express.static(publicPath))
-  app.listen(port,()=>{
+  server.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
   });
  
@@ -38,6 +40,14 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   
   }
 
- 
+
+  // console.log("IO",io)
+
+  io.on('connection',(socket)=>{
+    console.log('New user connected')
+    socket.on('disconnect',()=>{
+      console.log('User was disconnected')
+    })
+  })
 
 });
