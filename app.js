@@ -46,13 +46,14 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   io.on('connection',(socket)=>{
     console.log('New user connected')
 
-    socket.emit('newMessage',{
-      createat:'123',
-      from:'sid',
-      text:'See you then'
-    })
+   
     socket.on('createMessage',(message)=>{
         console.log('CreateMessage',message);
+        io.emit('newMessage',{
+          from:message.from,
+          text:message.text,
+          createAt:new Date().getTime()
+        })
     })
 
     socket.on('disconnect',()=>{
