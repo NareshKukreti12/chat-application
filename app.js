@@ -45,8 +45,21 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   io.on('connection',(socket)=>{
     console.log('New user connected')
+
+    socket.emit('newMessage',{
+      createat:'123',
+      from:'sid',
+      text:'See you then'
+    })
+    socket.on('createMessage',(message)=>{
+        console.log('CreateMessage',message);
+    })
+
     socket.on('disconnect',()=>{
       console.log('User was disconnected')
+    })
+    socket.on('create',(newEmail)=>{
+        console.log("Create Email",   newEmail);
     })
   })
 
