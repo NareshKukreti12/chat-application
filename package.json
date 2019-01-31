@@ -13,11 +13,14 @@
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
+    "expect": "^24.0.0",
+    "mocha": "^5.2.0",
     "should": "^7.1.0",
     "supertest": "^1.0.0"
   },
   "scripts": {
     "start": "node app.js",
-    "test": "swagger project test"
+    "test":"mocha app *.test.js",
+    "test-watch":"nodemon --exec 'npm test'"
   }
 }

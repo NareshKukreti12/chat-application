@@ -8,6 +8,7 @@ const path=require('path');
 const socketIO=require('socket.io');
 module.exports = app; // for testing
 var server=http.createServer(app)
+var {generateMessage}=require('./message');
 var io=socketIO(server);
 
 var config = {
@@ -46,22 +47,12 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   io.on('connection',(socket)=>{
     console.log('New user connected')
 
-    socket.emit('newMessage',{
-      from:'Admin',
-      text:'Welcome to the chat app'
-    })
-    socket.broadcast.emit('newMessage',{
-      from:'Admin',
-      text:'New user joined'
-    })
+    socket.emit('newMessage',generateMessage('Admin','Welcome to the chat app'));
+    socket.broadcast.emit('newMessage',generateMessage('Admin','New user connected'));
 
     socket.on('createMessage',(message)=>{
         console.log('CreateMessage',message);
-        io.emit('newMessage',{
-          from:message.from,
-          text:message.text,
-          createAt:new Date().getTime()
-        })
+        io.emit('newMessage',generateMessage(message.from,message.text))
         //  socket.broadcast.emit('newMessage',{
         //    from:message.from,
         //    text:message.text,
