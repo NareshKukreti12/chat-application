@@ -8,7 +8,7 @@ const path=require('path');
 const socketIO=require('socket.io');
 module.exports = app; // for testing
 var server=http.createServer(app)
-var {generateMessage}=require('./message');
+var {generateMessage,generateLocationMessage}=require('./message');
 var io=socketIO(server);
 
 var config = {
@@ -54,11 +54,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
         console.log('CreateMessage',message);
         io.emit('newMessage',generateMessage(message.from,message.text))
         callback('This is from the server.');
-        //  socket.broadcast.emit('newMessage',{
-        //    from:message.from,
-        //    text:message.text,
-        //    createAt: new Date().getTime()
-        //  });
+    })
+    socket.on('createLocationMessage',(coords)=>{
+       io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude))
     })
 
     socket.on('disconnect',()=>{
