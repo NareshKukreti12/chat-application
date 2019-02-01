@@ -9,6 +9,8 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.16.4",
+    "moment": "^2.24.0",
+    "nodemon": "^1.18.9",
     "socket.io": "^2.2.0",
     "swagger-express-mw": "^0.1.0"
   },
@@ -20,7 +22,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test":"mocha app *.test.js",
-    "test-watch":"nodemon --exec 'npm test'"
+    "test": "mocha app *.test.js",
+    "test-watch": "nodemon --exec 'npm test'"
   }
+  
 }
