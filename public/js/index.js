@@ -15,13 +15,10 @@ function scrollToBottom(){
    if(clientHeight + scrollTop+newMessageHeight+lastMessageHeight>=scrollHeight){
        messages.scrollTop(scrollHeight);
    }
-   
-
 }
 
 socket.on('connect',function(){
-    console.log('Connected to server');
-   
+    console.log('Connected to server');  
 
 });
 socket.on('disconnect',function(){
