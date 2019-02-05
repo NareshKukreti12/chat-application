@@ -6,11 +6,13 @@ const http=require('http');
 var app = express();
 const path=require('path');
 const socketIO=require('socket.io');
+const {Users}=require('./users');
 module.exports = app; // for testing
 var server=http.createServer(app)
 var {generateMessage,generateLocationMessage}=require('./message');
+const {isRealString}=require('./validation')
 var io=socketIO(server);
-
+var users=new Users();
 var config = {
   appRoot: __dirname // required config
 };
@@ -45,11 +47,23 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   // console.log("IO",io)
 
   io.on('connection',(socket)=>{
-    console.log('New user connected')
+    socket.on('join',(params,callback)=>{
+       if(!isRealString(params.name) || (!isRealString(params.room))){
+        return callback('Name and room name are required');
+       }
+       socket.join(params.room);
+       users.removeUser(socket.id);
+       users.addUser(socket.id,params.name,params.room)
 
-    socket.emit('newMessage',generateMessage('Admin','Welcome to the chat app'));
-    socket.broadcast.emit('newMessage',generateMessage('Admin','New user connected'));
+       io.to(params.room).emit('updateUserList',users.getUserList(params.room));
 
+       //socket.leave('');
+       //socket.broadcast.emit
+       //socket.emit
+       socket.emit('newMessage',generateMessage('Admin','Welcome to the chat app'));
+       socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} has joined`));
+       callback()
+    })
     socket.on('createMessage',(message,callback)=>{
         console.log('CreateMessage',message);
         io.emit('newMessage',generateMessage(message.from,message.text))
@@ -60,7 +74,11 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     })
 
     socket.on('disconnect',()=>{
-      console.log('User was disconnected')
+       var user=users.removeUser(socket.id);
+       if(user){
+         io.to(user.room).emit('updateUserList',users.getUserList(user.room));
+         io.to(user.room).emit('newMessage',generateMessage('Admin',`${user.name} has left`));
+       }
     })
     socket.on('create',(newEmail)=>{
         console.log("Create Email",   newEmail);
