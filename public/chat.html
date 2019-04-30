@@ -11,18 +11,25 @@
            <div id="users"></div>
         </div>
         <div class="chat__main">
+          
             <ol id="messages" class="chat__messages">
             </ol>
+            <div id="feedback"  style="width:100%;padding-top: 20px;padding-bottom: 20px;color: #313131">
+                  
+             </div>
               <div class="chat__footer">
+                   
                     <form id="message-form">
-                            <input name="message" autofocus type="text" placeholder="Message"/>  
+                            <input name="message" id="message_box" autofocus type="text" placeholder="Message"/>  
+                          
                             <button >Send</button>
                            
                             <!-- <input type="submit" value="Click Me"/> -->
                     </form>
+            
                     <button id="send-location">Send location</button>
               </div>
-              
+             
         </div>
        <script id="message-template" type="text/template">
         <li class="message">

@@ -1,9 +1,9 @@
 // var moment = require("moment");
 
 var socket= io();
-
-
-
+var messageTextBox1= jQuery('[name=message]');
+var message_box=document.getElementById('message_box');
+var feedback=document.getElementById('feedback');
 function scrollToBottom(){
     //Selectors
     var messages=jQuery('#messages');
@@ -61,6 +61,10 @@ socket.on('newMessage',function(message){
 
 
 });
+
+
+
+
   
 socket.on('newLocationMessage',function(message){
     var formattedTime=moment(message.createdAt).format('h:mm a');
@@ -102,4 +106,16 @@ locationButton.on('click',function(){
         locationButton.removeAttr('disabled').text('Send location');
         alert('Unable to fetch location')
     })
+})
+message_box.addEventListener('keypress',function(){
+    console.log("Here...")
+    socket.emit('typing');
+})
+
+socket.on('typing',function(){
+  feedback.innerHTML="<p><em>typing..</em></p>";
+   console.log("Typing Event")
+   setTimeout(()=>{
+       feedback.innerHTML="";
+   },2000)
 })

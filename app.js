@@ -104,6 +104,12 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     socket.on('create',(newEmail)=>{
         console.log("Create Email",   newEmail);
     })
+    socket.on('typing',function(){
+      socket.broadcast.emit('typing');
+    })
+    // socket.on('key_released',function(){
+    //   socket.broadcast.emit('key_released');
+    // })
   })
 
 });
