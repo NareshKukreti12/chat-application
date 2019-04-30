@@ -88,7 +88,7 @@ jQuery('#message-form').on('submit',function(e){
 var locationButton=jQuery('#send-location');
 locationButton.on('click',function(){
     if(!navigator.geolocation){
-        return alert('Gelocation not supported by where browser');
+        return alert('Gelocation not supported by your browser');
     }
     locationButton.attr('disabled','disabled').text('Sending location...');
     navigator.geolocation.getCurrentPosition(function(position){
