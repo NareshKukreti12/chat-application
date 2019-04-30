@@ -25,7 +25,17 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   var port = process.env.PORT || 3000;
 
-
+  var enableCORS = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With,*');
+     if ('OPTIONS' == req.method) {
+        res.send(200);
+    } else {
+        next();
+    };
+  };
+  app.use(enableCORS);
 
 
 
@@ -47,6 +57,8 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   // console.log("IO",io)
 
   io.on('connection',(socket)=>{
+      console.log("Connected....")
+
     socket.on('join',(params,callback)=>{
        if(!isRealString(params.name) || (!isRealString(params.room))){
         return callback('Name and room name are required');
@@ -95,3 +107,6 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   })
 
 });
+
+
+
